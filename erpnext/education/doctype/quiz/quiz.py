@@ -10,7 +10,6 @@ class Quiz(Document):
 
 
 	def validate_quiz_attempts(self, enrollment, quiz_name):
-		print(enrollment, quiz_name)
 		if self.max_attempts > 0:
 			try:
 				if len(frappe.get_all("Quiz Activity", {'enrollment': enrollment.name, 'quiz': quiz_name})) >= self.max_attempts:

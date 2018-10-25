@@ -68,15 +68,16 @@ def evaluate_quiz(quiz_response, **kwargs):
 	enrollment = get_course_enrollment(course_name, frappe.session.user)
 	try:
 		quiz = frappe.get_doc("Quiz", quiz_name)
-		answers, score = quiz.evaluate(quiz_response, enrollment, quiz_name)
-		add_quiz_activity(enrollment, quiz_name, score, answers, quiz_response)
+		answers, score = quiz.evaluate(quiz_response, enrollment,quiz_name)
+		status = "Pass" if(score >= quiz.passing_score) else "Fail"
+		add_quiz_activity(enrollment, quiz_name, score, answers, quiz_response, status)
 		return score
 	except frappe.DoesNotExistError:
 		frappe.throw("Quiz {0} does not exist".format(quiz_name))
 		return None
 
 
-def add_quiz_activity(enrollment, quiz, score, answers, quiz_response):
+def add_quiz_activity(enrollment, quiz, score, answers, quiz_response, status):
 	print(quiz, answers, score)
 	if not enrollment:
 		frappe.throw("The user is not enrolled for the course {course}".format(course=course))
@@ -85,7 +86,8 @@ def add_quiz_activity(enrollment, quiz, score, answers, quiz_response):
 		"enrollment": enrollment.name,
 		"quiz": quiz,
 		"score": score,
-		"date": frappe.utils.datetime.datetime.now()
+		"date": frappe.utils.datetime.datetime.now(),
+		"status": status
 		})
 	for question in quiz_response.keys():
 		activity.append("result",
