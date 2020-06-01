@@ -10,8 +10,6 @@
 		style='max-width: 400px; display: inline-block; margin-right: 10px;'
 		value='{{ frappe.form_dict.q or ''}}'
 		{% if not frappe.form_dict.q%}placeholder="{{ _("What do you need help with?") }}"{% endif %}>
-	<input type='submit'
-		class='btn btn-sm btn-light btn-search' value="{{ _("Search") }}">
 	</form>
 </div>
 
@@ -31,6 +29,7 @@
 </div>
 {% endfor %}
 
+{% if topics %}
 <div style="margin-bottom: 30px;">
 	<h2>{{ _("Forum Activity") }}</h2>
 	{% for topic in topics %}
@@ -46,6 +45,7 @@
 	<p><a href="{{ forum_url }}">{{ _("Visit the forums") }}</a></p>
 	<hr>
 </div>
+{% endif %}
 
 {% if issues | len > 0 -%}
 <div style="margin-bottom: 20px;">

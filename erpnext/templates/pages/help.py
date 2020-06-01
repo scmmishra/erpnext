@@ -9,8 +9,9 @@ def get_context(context):
 	s = settings
 
 	# Get Started sections
-	sections = json.loads(s.get_started_sections)
-	context.get_started_sections = sections
+	if s.get_started_sections:
+		sections = json.loads(s.get_started_sections)
+		context.get_started_sections = sections
 
 	# Forum posts
 	topics_data, post_params = get_forum_posts(s)
@@ -20,7 +21,7 @@ def get_context(context):
 
 	# Issues
 	if frappe.session.user != "Guest":
-		context.issues = frappe.get_list("Issue", fields=["name", "status", "subject", "modified"])[:3]
+		context.issues = frappe.get_all("Issue", fields=["name", "status", "subject", "modified"])[:3]
 	else:
 		context.issues = []
 
