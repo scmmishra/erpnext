@@ -14,10 +14,11 @@ def get_context(context):
 		context.get_started_sections = sections
 
 	# Forum posts
-	topics_data, post_params = get_forum_posts(s)
-	context.post_params = post_params
-	context.forum_url = s.forum_url
-	context.topics = topics_data[:3]
+	if s.show_latest_forum_posts:
+		topics_data, post_params = get_forum_posts(s)
+		context.post_params = post_params
+		context.forum_url = s.forum_url
+		context.topics = topics_data[:3]
 
 	# Issues
 	if frappe.session.user != "Guest":
