@@ -1,17 +1,60 @@
 {% extends "templates/web.html" %}
 
-{% block title %} {{ _("Help") }} {% endblock %}
-
-{% block header %}<h1>{{ _("Help") }}</h1>
-
-<div style="margin-bottom: 20px;">
-	<form action="/search_help" style="display: flex;">
-	<input name='q' class='form-control' type='text'
-		style='max-width: 400px; display: inline-block; margin-right: 10px;'
-		value='{{ frappe.form_dict.q or ''}}'
-		{% if not frappe.form_dict.q%}placeholder="{{ _("What do you need help with?") }}"{% endif %}>
-	</form>
+{% block content %}
+<section class="jumbotron" style="{{bg }}">
+	<div class='container' style="text-align: {{ align_greeting }};">
+		<h1 class="h1">{{ greeting_text }}</h1>
+		<p class="mt-4">
+			<div class="input-group shadow-sm" style="width:50%; margin-left: {{ align_search_box }}">
+				<form action="/search_help" class="search-input">
+				<input name='q' class="form-control py-2 border-right-0 border" type="Text"
+				value='{{ frappe.form_dict.q or ''}}'
+				{% if not frappe.form_dict.q %}placeholder="{{ _("Search for help articles and more") }}"{% endif %}>
+				<span class="input-group-append">
+					<div class="border input-group-text bg-white"><i class="fa fa-search text-muted"></i></div>
+				</span>
+				</form>
+			</div>
+		</p>
+	</div>
+</section>
+{% if favorite_article_list %}
+<div class='container mb-5'>
+	<h3 class="h3 pb-3">{{ _("Frequently Read Articles") }}</h3>
+	<div class="row row-cols-1 row-cols-md-3">
+		{% for favorite_article in favorite_article_list %}
+		<div class="col mb-4">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">{{ favorite_article['title'] }}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">{{ favorite_article['category'] }}</h6>
+					<p class="card-text">{{ favorite_article['content'] }}</p>
+					<a href="{{ favorite_article['route'] }}" class="card-link">Read More</a>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
 </div>
+{% endif %}
+
+{% if help_article_list %}
+<div class='container mb-5'>
+	<h3 class="h3 pb-3">{{ _("Help Articles") }}</h3>
+	<div class="row row-cols-1 row-cols-md-3">
+		{% for item in help_article_list %}
+		<div class="col mb-4 text-truncate">
+			<h5 class="list">{{ item['category'].name }}</h5>
+			<div class="list">
+				{% for article in item['articles'] %}
+				<a href="{{ article.route }}" class="d-block">{{ article.title }}</a>
+				{% endfor %}
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endif %}
 
 {% for section in get_started_sections %}
 <div style="margin-bottom: 30px;">
@@ -60,5 +103,58 @@
 	{{ _("Open a new ticket") }}
 </a>
 {%- endif %}
+
+<style>
+	.selectable-card {
+		cursor: pointer;
+	}
+
+	.selectable-card:hover {
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	}
+
+	.status-pill {
+		padding: 2px 8px;
+		font-size: 85%;
+		border-radius: 1000px;
+	}
+
+	.status-green {
+		background: #C6F6D5;
+		color: #2F855A !important;
+	}
+
+	.status-orange {
+		background: #FBD38D;
+		color: #C05621 !important;
+	}
+
+	.status-red {
+		background: #FEB2B2;
+		color: #C53030 !important;
+	}
+
+	.no-padding {
+		padding: 0;
+	}
+
+	.card-text {
+		height: 80px;
+	}
+
+	.list {
+		padding: 0 10px;
+	}
+
+	.jumbotron {
+		height: 400px;
+	}
+	
+	.search-input {
+		width: 100%; 
+		display: flex;
+	}
+
+</style>
 
 {% endblock %}
