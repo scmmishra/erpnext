@@ -24,11 +24,8 @@
   "post_route_string",
   "support_portal_setting_section",
   "greeting_text",
-  "background",
   "column_break_20",
   "greeting_text_and_search_bar_alignment",
-  "select_color",
-  "add_image",
   "search_apis_sb",
   "search_apis"
  ],
@@ -159,32 +156,6 @@
    "show_seconds": 1
   },
   {
-   "default": "Color",
-   "fieldname": "background",
-   "fieldtype": "Select",
-   "label": "Background",
-   "options": "Color\nImage",
-   "show_days": 1,
-   "show_seconds": 1
-  },
-  {
-   "default": "#ffffff",
-   "depends_on": "eval:doc.background==\"Color\"",
-   "fieldname": "select_color",
-   "fieldtype": "Color",
-   "label": "Select Color",
-   "show_days": 1,
-   "show_seconds": 1
-  },
-  {
-   "depends_on": "eval:doc.background==\"Image\"",
-   "fieldname": "add_image",
-   "fieldtype": "Attach Image",
-   "label": "Add Image",
-   "show_days": 1,
-   "show_seconds": 1
-  },
-  {
    "fieldname": "column_break_20",
    "fieldtype": "Column Break",
    "show_days": 1,
@@ -193,7 +164,7 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-06-04 16:44:01.254148",
+ "modified": "2020-06-08 12:06:53.706157",
  "modified_by": "Administrator",
  "module": "Support",
  "name": "Support Settings",

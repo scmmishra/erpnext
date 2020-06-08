@@ -1,53 +1,43 @@
 from __future__ import unicode_literals
 import frappe, json
-
+from frappe.utils.user import is_website_user
+from frappe import _
 import requests
 
 def get_context(context):
 	context.no_cache = 1
-	context.bg = 'background-color: #fafbfc; border-radius:0'
-	context.align_greeting = 'start'
-	context.align_search_box = '0'
-	settings = frappe.get_doc("Support Settings", "Support Settings")
-	s = settings
+	context.align_greeting = ''
+	context.align_search_box = 'search-input-alignment-left'
+	s = frappe.get_doc("Support Settings")
 
-	context.greeting_text = s.greeting_text if s.greeting_text else "We're here to help"
+	context.greeting_text = s.greeting_text if s.greeting_text else _("We're here to help")
 
 	if s.greeting_text_and_search_bar_alignment == 'Center':
-		context.align_greeting = 'center'
-		context.align_search_box = '25%'
+		context.align_greeting = 'text-center'
+		context.align_search_box = 'search-input-alignment-center'
 	if s.greeting_text_and_search_bar_alignment == 'Right':
-		context.align_greeting = 'end'
-		context.align_search_box = '50%'
-	if s.background == 'Color' and s.select_color:
-		context.bg = 'background-color: ' + s.select_color + '; border-radius:0'
-	if s.background == 'Image' and s.add_image:
-		context.bg = 'background-image: url(' + s.add_image + '); background-repeat: no-repeat; border-radius:0'
-
+		context.align_greeting = 'text-end'
+		context.align_search_box = 'search-input-alignment-right'
+	
 	# Support content
 	favorite_article_count = 0
-	portal_setting = frappe.get_single("Portal Settings")
 	context.favorite_article_list=[]
 	context.help_article_list=[]
 	context.category_list = frappe.get_all("Help Category", fields="name")
-	all_articles = [i[0] for i in frappe.db.sql("""SELECT route from `tabHelp Article`""")]
 	favorite_articles = get_favorite_articles()
+	
 	for article in favorite_articles:
 		favorite_article_dict = {}
-		if favorite_article_count < 3:
-			if article[0] in all_articles:
-				favorite_article = frappe.get_all("Help Article", fields=["title", "content", "route", "category"], filters={"route": article[0]})
-				content = frappe.utils.strip_html(favorite_article[0].content)
-				if len(content) > 115:
-					content = content[:112] + '...'	
-				favorite_article_dict = {
-					'title': favorite_article[0].title,
-					'content': content,
-					'category': favorite_article[0].category,
-					'route': favorite_article[0].route,
+		description = frappe.utils.strip_html(article[1])
+		if len(description) > 115:
+			description = description[:112] + '...'
+		favorite_article_dict = {
+					'title': article[0],
+					'description': description,
+					'route': article[2],
+					'category': article[3],
 				}
-				context.favorite_article_list.append(favorite_article_dict)
-				favorite_article_count += 1			
+		context.favorite_article_list.append(favorite_article_dict)
 
 	for category in context.category_list:
 		help_aricles_per_category = {}
@@ -71,8 +61,11 @@ def get_context(context):
 		context.topics = topics_data[:3]
 
 	# Issues
+	ignore_permissions = False
+	if is_website_user():
+		ignore_permissions = True
 	if frappe.session.user != "Guest":
-		context.issues = frappe.get_all("Issue", fields=["name", "status", "subject", "modified"])[:3]
+		context.issues = frappe.get_list("Issue", fields=["name", "status", "subject", "modified"], ignore_permissions=ignore_permissions)[:3]
 	else:
 		context.issues = []
 
@@ -97,7 +90,21 @@ def get_forum_posts(s):
 
 def get_favorite_articles():
 	return frappe.db.sql(
-			"""SELECT path, COUNT(*)
-				FROM `tabWeb Page View`
-				GROUP BY path
-				ORDER BY COUNT(*) DESC""")
+			"""
+			SELECT
+			t1.title as title,
+			t1.content as content,
+			t1.route as route,
+			t1.category as category,
+			count(t1.route) as count 
+			FROM
+			`tabHelp Article` AS t1 
+			INNER JOIN
+			`tabWeb Page View` AS t2 
+			ON t1.route = t2.path 
+			GROUP BY
+			route 
+			ORDER BY
+			count DESC
+			LIMIT 3;
+				""")

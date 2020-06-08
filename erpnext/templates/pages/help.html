@@ -1,11 +1,11 @@
 {% extends "templates/web.html" %}
 
 {% block content %}
-<section class="jumbotron" style="{{bg }}">
-	<div class='container' style="text-align: {{ align_greeting }};">
-		<h1 class="h1">{{ greeting_text }}</h1>
+<section class="jumbotron bg-light">
+	<div class='container {{ align_greeting }}'>
+		<h1 class="h1">{{ _(greeting_text) }}</h1>
 		<p class="mt-4">
-			<div class="input-group shadow-sm" style="width:50%; margin-left: {{ align_search_box }}">
+			<div class="input-group shadow-sm {{ align_search_box }}">
 				<form action="/search_help" class="search-input">
 				<input name='q' class="form-control py-2 border-right-0 border" type="Text"
 				value='{{ frappe.form_dict.q or ''}}'
@@ -28,7 +28,7 @@
 				<div class="card-body">
 					<h5 class="card-title">{{ favorite_article['title'] }}</h5>
 					<h6 class="card-subtitle mb-2 text-muted">{{ favorite_article['category'] }}</h6>
-					<p class="card-text">{{ favorite_article['content'] }}</p>
+					<p class="card-text">{{ favorite_article['description'] }}</p>
 					<a href="{{ favorite_article['route'] }}" class="card-link">Read More</a>
 				</div>
 			</div>
@@ -57,10 +57,10 @@
 {% endif %}
 
 {% for section in get_started_sections %}
-<div style="margin-bottom: 30px;">
+<div class="container mb-30">
 	<h2>{{ section["name"] }}</h2>
 	{% for item in section["items"] %}
-	<div style="margin: 20px 0;">
+	<div class="m-20-0">
 		<a href="{{ item.link }}"><b>{{ item.title }}</b></a>
 		{% if item.description -%}
 		<p>{{ item.description }}</p>
@@ -72,11 +72,11 @@
 </div>
 {% endfor %}
 
-<!-- {% if topics %}
-<div style="margin-bottom: 30px;">
+{% if topics %}
+<div class="container mb-30">
 	<h2>{{ _("Forum Activity") }}</h2>
 	{% for topic in topics %}
-	<div style="margin: 20px 0;">
+	<div class="m-20-0">
 		<a href="{{ topic[post_params.link] }}">
 			<b>{{ topic[post_params.title] }}</b>
 		</a>
@@ -91,53 +91,19 @@
 {% endif %}
 
 {% if issues | len > 0 -%}
-<div style="margin-bottom: 20px;">
+<div class="container mb-30">
 	<h2>{{ _("Your tickets") }}</h2>
 		{% for doc in issues %}
 			{% include "templates/includes/issue_row.html" %}
 		{% endfor %}
 	<p><a href="/issues">{{ _("See all open tickets") }}</a></p>
+	<a href="/issues?new=1" class="btn btn-primary btn-new btn-sm">
+		{{ _("Open a new ticket") }}
+	</a>
 </div>
-
-<a href="/issues?new=1" class="btn btn-primary btn-new btn-sm">
-	{{ _("Open a new ticket") }}
-</a>
-{%- endif %} -->
+{%- endif %}
 
 <style>
-	.selectable-card {
-		cursor: pointer;
-	}
-
-	.selectable-card:hover {
-		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-	}
-
-	.status-pill {
-		padding: 2px 8px;
-		font-size: 85%;
-		border-radius: 1000px;
-	}
-
-	.status-green {
-		background: #C6F6D5;
-		color: #2F855A !important;
-	}
-
-	.status-orange {
-		background: #FBD38D;
-		color: #C05621 !important;
-	}
-
-	.status-red {
-		background: #FEB2B2;
-		color: #C53030 !important;
-	}
-
-	.no-padding {
-		padding: 0;
-	}
-
 	.card-text {
 		height: 80px;
 	}
@@ -153,6 +119,32 @@
 	.search-input {
 		width: 100%; 
 		display: flex;
+	}
+
+	.text-end {
+		text-align: end;
+	}
+
+	.search-input-alignment-left {
+		width: 50%;
+	}
+
+	.search-input-alignment-center {
+		width: 50%;
+		margin-left: 25%;
+	}
+
+	.search-input-alignment-right {
+		width: 50%;
+		margin-left: 50%;
+	}
+
+	.mb-30 {
+		margin-bottom: 30px;
+	}
+
+	.m-20-0 {
+		margin: 20px 0;
 	}
 
 </style>
