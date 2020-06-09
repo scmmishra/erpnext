@@ -7,9 +7,10 @@ import requests
 def get_context(context):
 	context.no_cache = 1
 	context.align_greeting = ''
-	s = frappe.get_doc("Support Settings")
+	settings = frappe.get_doc("Support Settings")
 
-	context.greeting_text = s.greeting_text if s.greeting_text else _("We're here to help")
+	context.greeting_text = settings.greeting_text
+	context.subtitle = settings.subtitle
 
 	# Support content
 	favorite_article_count = 0
@@ -35,16 +36,12 @@ def get_context(context):
 	for category in context.category_list:
 		help_aricles_per_category = {}
 		help_articles = frappe.get_all("Help Article", fields="*", filters={"category": category.name}, order_by="modified desc", limit=5)
-		help_aricles_per_caetgory = {
-			'category': category,
-			'articles': help_articles,
-		}
-		context.help_article_list.append(help_aricles_per_caetgory)
-
-	# Get Started sections
-	if s.get_started_sections:
-		sections = json.loads(s.get_started_sections)
-		context.get_started_sections = sections
+		if len(help_articles):
+			help_aricles_per_caetgory = {
+				'category': category,
+				'articles': help_articles,
+			}
+			context.help_article_list.append(help_aricles_per_caetgory)
 
 	# Issues
 	ignore_permissions = False
