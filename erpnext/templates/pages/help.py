@@ -20,14 +20,14 @@ def get_context(context):
 
 	for article in favorite_articles:
 		favorite_article_dict = {}
-		description = frappe.utils.strip_html(article[1])
-		if len(description) > 115:
-			description = description[:112] + '...'
+		description = frappe.utils.strip_html(article.content)
+		if len(description) > 150:
+			description = description[:150] + '...'
 		favorite_article_dict = {
-					'title': article[0],
+					'title': article.title,
 					'description': description,
-					'route': article[2],
-					'category': article[3],
+					'route': article.route,
+					'category': article.category,
 				}
 		context.favorite_article_list.append(favorite_article_dict)
 
@@ -55,22 +55,23 @@ def get_context(context):
 		context.issues = []
 
 def get_favorite_articles():
-	return frappe.db.sql(
-			"""
+	ranked_articles = frappe.db.sql("""
 			SELECT
-			t1.title as title,
-			t1.content as content,
-			t1.route as route,
-			t1.category as category,
-			count(t1.route) as count
+				t1.title as title,
+				t1.content as content,
+				t1.route as route,
+				t1.category as category,
+				count(t1.route) as count
 			FROM
-			`tabHelp Article` AS t1
-			INNER JOIN
-			`tabWeb Page View` AS t2
+				`tabHelp Article` AS t1
+				INNER JOIN
+				`tabWeb Page View` AS t2
 			ON t1.route = t2.path
-			GROUP BY
-			route
-			ORDER BY
-			count DESC
-			LIMIT 3;
-				""")
+			GROUP BY route
+			ORDER BY count DESC
+			LIMIT 6;
+	""", as_dict=1)
+	if len(ranked_articles):
+		return ranked_articles
+	else:
+		return frappe.get_list("Help Article", fields=['title', 'content', 'route', 'category'], filters={"published": 1}, limit=6)
