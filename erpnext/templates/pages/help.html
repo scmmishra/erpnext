@@ -4,135 +4,162 @@
 <section class="section section-padding-top section-padding-bottom">
 	<div class="container">
 		<div class="hero-content">
-			<h1>{{ greeting_text }}</h1>
-			<p class="hero-subtitle">GitHub-inspired simple and modern SVG charts for the web with zero dependencies.</p>
+			<h1>{{ greeting_text or _("We're here to help") }}</h1>
+			<p class="hero-subtitle">{{ subtitle or _("Search for an answer or browse help topics.") }}</p>
 			<div class="mt-4">
-				<div class="input-group shadow-sm">
-					<form action="/search_help" class="search-input">
-					<input name='q' class="form-control py-2 border-right-0 border" type="Text"
-					value='{{ frappe.form_dict.q or ''}}'
-					{% if not frappe.form_dict.q %}placeholder="{{ _("Search for help articles and more") }}"{% endif %}>
-					<span class="input-group-append">
-						<div class="border input-group-text bg-white"><i class="fa fa-search text-muted"></i></div>
-					</span>
-					</form>
+				<div class="support-search">
+					<div class="dropdown">
+						<input type="search" class="form-control" placeholder="Search the docs (Press ? to focus)" />
+						<div class="overflow-hidden shadow dropdown-menu w-100">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
 
-{% if favorite_article_list %}
-<div class='container mb-5'>
-	<h3 class="h3 pb-3">{{ _("Frequently Read Articles") }}</h3>
-	<div class="row row-cols-1 row-cols-md-3">
-		{% for favorite_article in favorite_article_list %}
-		<div class="col mb-4">
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">{{ favorite_article['title'] }}</h5>
-					<h6 class="card-subtitle mb-2 text-muted">{{ favorite_article['category'] }}</h6>
-					<p class="card-text">{{ favorite_article['description'] }}</p>
-					<a href="{{ favorite_article['route'] }}" class="card-link">Read More</a>
-				</div>
-			</div>
-		</div>
-		{% endfor %}
-	</div>
-</div>
-{% endif %}
-
-{% if help_article_list %}
-<div class='container mb-5'>
-	<h3 class="h3 pb-3">{{ _("Help Articles") }}</h3>
-	<div class="row row-cols-1 row-cols-md-3">
-		{% for item in help_article_list %}
-		<div class="col mb-4 text-truncate">
-			<h5 class="list">{{ item['category'].name }}</h5>
-			<div class="list">
-				{% for article in item['articles'] %}
-				<a href="{{ article.route }}" class="d-block">{{ article.title }}</a>
-				{% endfor %}
-			</div>
-		</div>
-		{% endfor %}
-	</div>
-</div>
-{% endif %}
-
-{% for section in get_started_sections %}
-<div class="container mb-30">
-	<h2>{{ section["name"] }}</h2>
-	{% for item in section["items"] %}
-	<div class="m-20-0">
-		<a href="{{ item.link }}"><b>{{ item.title }}</b></a>
-		{% if item.description -%}
-		<p>{{ item.description }}</p>
-		{%- endif %}
-	</div>
-	{% endfor %}
-	<p><a href="/kb/support">{{ _("See All Articles") }}</a></p>
-	<hr>
-</div>
-{% endfor %}
-
 {% if issues | len > 0 -%}
-<div class="container mb-30">
-	<h2>{{ _("Your tickets") }}</h2>
+<section class="section section-padding-top section-padding-bottom bg-light">
+	<div class="container">
+		<div class="d-flex justify-content-between">
+			<h2>{{ _("Open tickets") }}</h2>
+			<div>
+				<a href="/issues?new=1" class="btn btn-primary btn-new">
+					+ {{ _("New ticket") }}
+				</a>
+			</div>
+		</div>
 		{% for doc in issues %}
 			{% include "templates/includes/issue_row.html" %}
 		{% endfor %}
-	<p><a href="/issues">{{ _("See all open tickets") }}</a></p>
-	<a href="/issues?new=1" class="btn btn-primary btn-new btn-sm">
-		{{ _("Open a new ticket") }}
-	</a>
-</div>
+		<div>
+			<a href="/issues" class="btn btn-primary-light">{{ _("See all open tickets") }}</a>
+		</div>
+	</div>
+</section>
 {%- endif %}
 
+{% if favorite_article_list %}
+<section class="section section-padding-top section-padding-bottom">
+	<div class='container'>
+		<h3>{{ _("Frequently Read Articles") }}</h3>
+		<div class="row">
+			{% for favorite_article in favorite_article_list %}
+				<div class="mt-4 col-12 col-sm-6 col-lg-4">
+					<div class="card card-md h-100">
+						<div class="card-body">
+							<h6 class="card-subtitle mb-2 text-uppercase small text-muted">{{ favorite_article['category'] }}</h6>
+							<h3 class="card-title">{{ favorite_article['title'] }}</h3>
+							<p class="card-text">{{ favorite_article['description'] }}</p>
+						</div>
+						<a href="{{ favorite_article['route'] }}" class="stretched-link"></a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+{% endif %}
+
+{% if help_article_list %}
+<section class="section section-padding-top section-padding-bottom bg-light">
+	<div class='container'>
+		<h3>{{ _("Help Articles") }}</h3>
+		<div class="row">
+			{% for item in help_article_list %}
+			<div class="mt-5 col-12 col-sm-6 col-lg-4">
+				<h5>{{ item['category'].name }}</h5>
+				<div>
+					{% for article in item['articles'] %}
+					<a href="{{ article.route }}" class="mt-2 d-block">{{ article.title }}</a>
+					{% endfor %}
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+{% endif %}
+
 <style>
-	.card-text {
-		height: 80px;
-	}
-
-	.list {
-		padding: 0 10px;
-	}
-
-	.jumbotron {
-		height: 400px;
-	}
-
-	.search-input {
+	.support-search {
+		position: relative;
 		width: 100%;
-		display: flex;
+		max-width: 500px;
+		padding-right: 0;
+		padding-right: 0;
 	}
-
-	.text-end {
-		text-align: end;
-	}
-
-	.search-input-alignment-left {
-		width: 50%;
-	}
-
-	.search-input-alignment-center {
-		width: 50%;
-		margin-left: 25%;
-	}
-
-	.search-input-alignment-right {
-		width: 50%;
-		margin-left: 50%;
-	}
-
-	.mb-30 {
-		margin-bottom: 30px;
-	}
-
-	.m-20-0 {
-		margin: 20px 0;
-	}
-
 </style>
 
 {% endblock %}
+
+{%- block script -%}
+<script>
+	frappe.ready(() => {
+		setup_search();
+	});
+
+	function setup_search() {
+		let $dropdown = $('.support-search .dropdown');
+		let $dropdown_menu = $('.support-search .dropdown-menu');
+		let $input = $('.support-search input');
+
+		$(document).on('keypress', e => {
+			if (e.key === '/') {
+				e.preventDefault();
+				$input.focus();
+			}
+		});
+
+		$input.on('input', frappe.utils.debounce(() => {
+			if (!$input.val()) {
+				clear_dropdown();
+				return;
+			}
+
+			frappe.call({
+				method: 'frappe.modules.full_text_search.web_search',
+				args: {
+					index_name: 'web_routes',
+					scope: '{{ docs_search_scope or "" }}' || null,
+					query: $input.val(),
+					limit: 5
+				}
+			}).then(r => {
+				let results = r.message || [];
+				let dropdown_html;
+				if (results.length == 0) {
+					dropdown_html = `<div class="dropdown-item">No results found</div>`;
+				} else {
+					dropdown_html = results.map(r => {
+						return `<a class="dropdown-item" href="/${r.path}">
+							<h6>${r.title_highlights || r.title}</h6>
+							<div style="white-space: normal;">${r.content_highlights}</div>
+						</a>`
+					}).join('')
+				}
+				$dropdown_menu.html(dropdown_html);
+				$dropdown_menu.addClass('show');
+			});
+		}, 500));
+
+		$input.on('focus', () => {
+			if (!$input.val()) {
+				clear_dropdown();
+			}
+		});
+
+		$input.on('blur', () => {
+			setTimeout(() => {
+				clear_dropdown();
+			}, 300);
+		});
+
+		function clear_dropdown() {
+			$dropdown_menu.html('');
+			$dropdown_menu.removeClass('show');
+		}
+	}
+</script>
+{%- endblock -%}
