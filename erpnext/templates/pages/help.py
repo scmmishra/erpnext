@@ -15,6 +15,7 @@ def get_context(context):
 	favorite_article_count = 0
 	context.favorite_article_list=[]
 	context.help_article_list=[]
+	context.docs_search_scope = "kb"
 	context.category_list = frappe.get_all("Help Category", fields="name")
 	favorite_articles = get_favorite_articles()
 
