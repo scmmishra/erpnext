@@ -11,11 +11,9 @@
   "issues_sb",
   "close_issue_after_days",
   "portal_sb",
-  "get_started_sections",
   "support_portal_setting_section",
   "greeting_text",
-  "column_break_20",
-  "greeting_text_and_search_bar_alignment",
+  "subtitle",
   "search_apis_sb",
   "search_apis"
  ],
@@ -36,11 +34,6 @@
    "fieldname": "portal_sb",
    "fieldtype": "Section Break",
    "label": "Support Portal"
-  },
-  {
-   "fieldname": "get_started_sections",
-   "fieldtype": "Code",
-   "label": "Get Started Sections"
   },
   {
    "fieldname": "search_apis_sb",
@@ -78,32 +71,24 @@
    "show_seconds": 1
   },
   {
+   "fieldname": "subtitle",
+   "fieldtype": "Small Text",
+   "label": "Subtitle",
+   "show_days": 1,
+   "show_seconds": 1
+  },
+  {
    "default": "We are here to help",
    "fieldname": "greeting_text",
    "fieldtype": "Data",
-   "label": "Greeting Text",
-   "show_days": 1,
-   "show_seconds": 1
-  },
-  {
-   "default": "Left",
-   "fieldname": "greeting_text_and_search_bar_alignment",
-   "fieldtype": "Select",
-   "label": "Greeting Text and Search Bar Alignment",
-   "options": "Left\nCenter\nRight",
-   "show_days": 1,
-   "show_seconds": 1
-  },
-  {
-   "fieldname": "column_break_20",
-   "fieldtype": "Column Break",
+   "label": "Title",
    "show_days": 1,
    "show_seconds": 1
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-06-09 12:12:19.288189",
+ "modified": "2020-06-09 13:29:15.398702",
  "modified_by": "Administrator",
  "module": "Support",
  "name": "Support Settings",
