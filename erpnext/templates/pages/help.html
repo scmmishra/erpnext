@@ -72,24 +72,6 @@
 </div>
 {% endfor %}
 
-{% if topics %}
-<div class="container mb-30">
-	<h2>{{ _("Forum Activity") }}</h2>
-	{% for topic in topics %}
-	<div class="m-20-0">
-		<a href="{{ topic[post_params.link] }}">
-			<b>{{ topic[post_params.title] }}</b>
-		</a>
-		{% if topic[post_params.description] -%}
-		<p>{{ topic[post_params.description] }}</p>
-		{%- endif %}
-	</div>
-	{% endfor %}
-	<p><a href="{{ forum_url }}">{{ _("Visit the forums") }}</a></p>
-	<hr>
-</div>
-{% endif %}
-
 {% if issues | len > 0 -%}
 <div class="container mb-30">
 	<h2>{{ _("Your tickets") }}</h2>

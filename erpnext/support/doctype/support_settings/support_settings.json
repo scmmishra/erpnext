@@ -12,16 +12,6 @@
   "close_issue_after_days",
   "portal_sb",
   "get_started_sections",
-  "show_latest_forum_posts",
-  "forum_sb",
-  "forum_url",
-  "get_latest_query",
-  "response_key_list",
-  "column_break_10",
-  "post_title_key",
-  "post_description_key",
-  "post_route_key",
-  "post_route_string",
   "support_portal_setting_section",
   "greeting_text",
   "column_break_20",
@@ -51,57 +41,6 @@
    "fieldname": "get_started_sections",
    "fieldtype": "Code",
    "label": "Get Started Sections"
-  },
-  {
-   "default": "0",
-   "fieldname": "show_latest_forum_posts",
-   "fieldtype": "Check",
-   "label": "Show Latest Forum Posts"
-  },
-  {
-   "depends_on": "show_latest_forum_posts",
-   "fieldname": "forum_sb",
-   "fieldtype": "Section Break",
-   "label": "Forum Posts"
-  },
-  {
-   "fieldname": "forum_url",
-   "fieldtype": "Data",
-   "label": "Forum URL"
-  },
-  {
-   "fieldname": "get_latest_query",
-   "fieldtype": "Data",
-   "label": "Get Latest Query"
-  },
-  {
-   "fieldname": "response_key_list",
-   "fieldtype": "Data",
-   "label": "Response Key List"
-  },
-  {
-   "fieldname": "column_break_10",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "post_title_key",
-   "fieldtype": "Data",
-   "label": "Post Title Key"
-  },
-  {
-   "fieldname": "post_description_key",
-   "fieldtype": "Data",
-   "label": "Post Description Key"
-  },
-  {
-   "fieldname": "post_route_key",
-   "fieldtype": "Data",
-   "label": "Post Route Key"
-  },
-  {
-   "fieldname": "post_route_string",
-   "fieldtype": "Data",
-   "label": "Post Route String"
   },
   {
    "fieldname": "search_apis_sb",
@@ -164,7 +103,7 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-06-08 12:06:53.706157",
+ "modified": "2020-06-09 12:12:19.288189",
  "modified_by": "Administrator",
  "module": "Support",
  "name": "Support Settings",

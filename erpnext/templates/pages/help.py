@@ -53,13 +53,6 @@ def get_context(context):
 		sections = json.loads(s.get_started_sections)
 		context.get_started_sections = sections
 
-	# Forum posts
-	if s.show_latest_forum_posts:
-		topics_data, post_params = get_forum_posts(s)
-		context.post_params = post_params
-		context.forum_url = s.forum_url
-		context.topics = topics_data[:3]
-
 	# Issues
 	ignore_permissions = False
 	if is_website_user():
@@ -69,25 +62,6 @@ def get_context(context):
 	else:
 		context.issues = []
 
-def get_forum_posts(s):
-	response = requests.get(s.forum_url + '/' + s.get_latest_query)
-	response.raise_for_status()
-	response_json = response.json()
-
-	topics_data = {} # it will actually be an array
-	key_list = s.response_key_list.split(',')
-	for key in key_list:
-		topics_data = response_json.get(key) if not topics_data else topics_data.get(key)
-
-	for topic in topics_data:
-		topic["link"] = s.forum_url + '/' + s.post_route_string + '/' + str(topic.get(s.post_route_key))
-
-	post_params = {
-		"title": s.post_title_key,
-		"description": s.post_description_key
-	}
-	return topics_data, post_params
-
 def get_favorite_articles():
 	return frappe.db.sql(
 			"""
@@ -96,14 +70,14 @@ def get_favorite_articles():
 			t1.content as content,
 			t1.route as route,
 			t1.category as category,
-			count(t1.route) as count 
+			count(t1.route) as count
 			FROM
-			`tabHelp Article` AS t1 
+			`tabHelp Article` AS t1
 			INNER JOIN
-			`tabWeb Page View` AS t2 
-			ON t1.route = t2.path 
+			`tabWeb Page View` AS t2
+			ON t1.route = t2.path
 			GROUP BY
-			route 
+			route
 			ORDER BY
 			count DESC
 			LIMIT 3;
