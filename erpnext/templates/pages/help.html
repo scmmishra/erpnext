@@ -1,23 +1,27 @@
 {% extends "templates/web.html" %}
 
 {% block content %}
-<section class="jumbotron bg-light">
-	<div class='container {{ align_greeting }}'>
-		<h1 class="h1">{{ _(greeting_text) }}</h1>
-		<p class="mt-4">
-			<div class="input-group shadow-sm {{ align_search_box }}">
-				<form action="/search_help" class="search-input">
-				<input name='q' class="form-control py-2 border-right-0 border" type="Text"
-				value='{{ frappe.form_dict.q or ''}}'
-				{% if not frappe.form_dict.q %}placeholder="{{ _("Search for help articles and more") }}"{% endif %}>
-				<span class="input-group-append">
-					<div class="border input-group-text bg-white"><i class="fa fa-search text-muted"></i></div>
-				</span>
-				</form>
+<section class="section section-padding-top section-padding-bottom">
+	<div class="container">
+		<div class="hero-content">
+			<h1>{{ greeting_text }}</h1>
+			<p class="hero-subtitle">GitHub-inspired simple and modern SVG charts for the web with zero dependencies.</p>
+			<div class="mt-4">
+				<div class="input-group shadow-sm">
+					<form action="/search_help" class="search-input">
+					<input name='q' class="form-control py-2 border-right-0 border" type="Text"
+					value='{{ frappe.form_dict.q or ''}}'
+					{% if not frappe.form_dict.q %}placeholder="{{ _("Search for help articles and more") }}"{% endif %}>
+					<span class="input-group-append">
+						<div class="border input-group-text bg-white"><i class="fa fa-search text-muted"></i></div>
+					</span>
+					</form>
+				</div>
 			</div>
-		</p>
+		</div>
 	</div>
 </section>
+
 {% if favorite_article_list %}
 <div class='container mb-5'>
 	<h3 class="h3 pb-3">{{ _("Frequently Read Articles") }}</h3>
@@ -97,9 +101,9 @@
 	.jumbotron {
 		height: 400px;
 	}
-	
+
 	.search-input {
-		width: 100%; 
+		width: 100%;
 		display: flex;
 	}
 

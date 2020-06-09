@@ -7,25 +7,17 @@ import requests
 def get_context(context):
 	context.no_cache = 1
 	context.align_greeting = ''
-	context.align_search_box = 'search-input-alignment-left'
 	s = frappe.get_doc("Support Settings")
 
 	context.greeting_text = s.greeting_text if s.greeting_text else _("We're here to help")
 
-	if s.greeting_text_and_search_bar_alignment == 'Center':
-		context.align_greeting = 'text-center'
-		context.align_search_box = 'search-input-alignment-center'
-	if s.greeting_text_and_search_bar_alignment == 'Right':
-		context.align_greeting = 'text-end'
-		context.align_search_box = 'search-input-alignment-right'
-	
 	# Support content
 	favorite_article_count = 0
 	context.favorite_article_list=[]
 	context.help_article_list=[]
 	context.category_list = frappe.get_all("Help Category", fields="name")
 	favorite_articles = get_favorite_articles()
-	
+
 	for article in favorite_articles:
 		favorite_article_dict = {}
 		description = frappe.utils.strip_html(article[1])
