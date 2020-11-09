@@ -87,6 +87,9 @@ class Membership(Document):
 		self.invoice = invoice.name
 
 		if with_payment_entry:
+			if not settings.payment_account:
+				frappe.throw(_("You need to set <b>Payment Account</b> in Membership Settings"))
+
 			from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 			frappe.flags.ignore_account_permission=True
 			pe = get_payment_entry(dt='Sales Invoice', dn=invoice.name, bank_amount=invoice.grand_total)
